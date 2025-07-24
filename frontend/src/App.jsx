@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IoClose } from "react-icons/io5";
 import Modal from "./components/Modal";
-
+import axios from 'axios'
+import { fetchStatesByCountryId } from "./services/api";
 function App() {
   const [isModalOpen, setModal] = useState(true);
   const [userType, setUserType] = useState('jobseeker');
@@ -19,6 +20,16 @@ function App() {
   const [openings, setOpenings] = useState(null);
   const [description, setDescription] = useState(null);
 
+  const [statesList, setStatesList] = useState([]);
+
+
+  const fetchStates = async () => {
+    const data = await fetchStatesByCountryId()
+    setStatesList(data?.data?.data)
+  }
+  useEffect(() => {
+    fetchStates()
+  }, [])
 
   const onHandleRegistration = () => {
     setModal(true)
@@ -34,7 +45,7 @@ function App() {
 
   const onHandleFormSubmit = (e) => {
     e.preventDefault()
-    
+
     let data = null;
     if (userType === "jobseeker") {
       // Job Seeker data
@@ -62,7 +73,7 @@ function App() {
       }
     }
     console.log(data)
-    
+
   }
 
 
@@ -117,6 +128,11 @@ function App() {
               <div className="my-2 w-[45%]">
                 <select className="border border-gray-300 p-1 outline-none w-full" value={state} onChange={(e) => setState(e.target.value)}>
                   <option>Select State</option>
+                  {
+                    statesList.map((eachState) => (
+                      <option key={eachState.id}>{eachState.name}</option>
+                    ))
+                  }
                 </select>
               </div>
               <div className="my-2 w-[45%]">
