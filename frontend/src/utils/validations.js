@@ -41,9 +41,9 @@ export const validateEmployerData = (body) => {
     const usMobileRegex = /^(\+1\s?)?(\([2-9][0-9]{2}\)|[2-9][0-9]{2})[\s.-]?[0-9]{3}[\s.-]?[0-9]{4}$/;
 
     if (!name) {
-        return 'Full Name is required';
+        return 'Contact Name is required';
     }
-    if (name.length < MINREQUIREDFNCHAR) return `Full Name atleast ${MINREQUIREDFNCHAR} characters required`
+    if (name.length < MINREQUIREDFNCHAR) return `Contact Name atleast ${MINREQUIREDFNCHAR} characters required`
 
     // EMAIL VALIDATIONS
     if (!email) return 'Email is required';
@@ -53,9 +53,9 @@ export const validateEmployerData = (body) => {
     }
 
     // US MOBILE NUMBER VALIDATIONS
-    if (!mobile) return 'Mobile number is required';
+    if (!mobile) return 'Contact number is required';
     if (!usMobileRegex.test(mobile)) {
-        return 'Invalid Mobile Number'
+        return 'Invalid Contact Number'
     }
 
     // COMPANY NAME VALIDATION
