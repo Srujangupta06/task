@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { IoClose } from "react-icons/io5";
 import Modal from "./components/Modal";
 import axios from 'axios'
-import { fetchStatesByCountryId } from "./services/api";
+import { fetchCitiesBasedOnStateId, fetchStatesByCountryId } from "./services/api";
 function App() {
-  const [isModalOpen, setModal] = useState(true);
+  const [isModalOpen, setModal] = useState(false);
   const [userType, setUserType] = useState('jobseeker');
 
   const [name, setName] = useState(null);
@@ -19,14 +19,21 @@ function App() {
   const [postalCode, setPostalCode] = useState(null);
   const [openings, setOpenings] = useState(null);
   const [description, setDescription] = useState(null);
-
+  const [resumeFile, setResumeFile] = useState(null);
   const [statesList, setStatesList] = useState([]);
-
+  const [citiesList, setCitiesList] = useState([])
 
   const fetchStates = async () => {
     const data = await fetchStatesByCountryId()
-    setStatesList(data?.data?.data)
+    setStatesList(data)
   }
+
+
+  const fetchCities = async (stateId) => {
+    const data = await fetchCitiesBasedOnStateId(stateId);
+    setCitiesList(data)
+  }
+
   useEffect(() => {
     fetchStates()
   }, [])
@@ -45,37 +52,55 @@ function App() {
 
   const onHandleFormSubmit = (e) => {
     e.preventDefault()
-
     let data = null;
     if (userType === "jobseeker") {
       // Job Seeker data
-      data = {
-        fullName: name,
-        mobileNumber,
-        email,
-        role,
-        state, city
-      }
+      data = new FormData()
+      data.append('fullName', name);
+      data.append('mobile', mobileNumber),
+        data.append('role', role),
+        data.append('state', state);
+      data.append('city', city),
+        data.append('email', email)
+      data.append('resume', resumeFile)
+      createJobSeeker(data)
     }
     else {
       // Employer data
-      data = {
-        companyName,
-        contactName: name,
-        mobileNumber,
-        contactEmail: email,
-        companyUrl,
-        openings,
-        postalCode,
-        meetingLink,
-        description,
-        state, city
-      }
+      data = new FormData()
+      data.append('contact_name', name)
+      data.append('contact_email', email)
+      data.append('company_name', companyName)
+      data.append('mobile', mobileNumber)
+      data.append('meeting_link', meetingLink)
+      data.append('state', state)
+      data.append('city', city)
+      data.append('company_url', companyUrl)
+      data.append('zipcode', postalCode)
+      data.append('total_openings', openings)
+      data.append('description', description)
     }
-    console.log(data)
 
   }
 
+  // JOB SEEKER REGISTRATION 
+
+  const createJobSeeker = async (data) => {
+    try {
+      const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/api/job-seeker/registration`
+      const response = await axios.post(apiUrl, data)
+      if (response.status === 200) {
+        console.log(response)
+      }
+    }
+    catch (e) {
+      console.log('ERROR CREATING JOB SEEKER', e)
+    }
+  }
+
+  const onHandleResumeUpload = (e) => {
+    setResumeFile(e.target.value)
+  }
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">
@@ -126,18 +151,27 @@ function App() {
                 <input type="text" required placeholder="Meeting Link" className="border border-gray-300 p-1 outline-none w-full" value={meetingLink} onChange={(e) => setMeetingLink(e.target.value)} />
               </div>}
               <div className="my-2 w-[45%]">
-                <select className="border border-gray-300 p-1 outline-none w-full" value={state} onChange={(e) => setState(e.target.value)}>
-                  <option>Select State</option>
+                <select className="border border-gray-300 p-1 outline-none w-full" onChange={(e) => {
+                  setState(e.target.value)
+                  fetchCities(e.target.value)
+                }}>
+                  <option value="">Select State</option>
                   {
                     statesList.map((eachState) => (
-                      <option key={eachState.id}>{eachState.name}</option>
+                      <option key={eachState.id} value={eachState.id}>{eachState.name}</option>
                     ))
                   }
                 </select>
               </div>
               <div className="my-2 w-[45%]">
-                <select className="border border-gray-300 p-1 outline-none w-full" value={city} onChange={(e) => setCity(e.target.value)}>
-                  <option>Select City</option>
+                <select className="border border-gray-300 p-1 outline-none w-full" value={city} onChange={(e) => {
+                  setCity(e.target.value)
+                }}>
+                  <option value="">Select City</option>{
+                    citiesList.map((eachCity) => (
+                      <option key={eachCity.id} value={eachCity.id}>{eachCity.cityName}</option>
+                    ))
+                  }
                 </select>
               </div>
               {userType !== "jobseeker" && <div className="my-2 w-[45%]">
@@ -150,7 +184,7 @@ function App() {
               {/*Upload Resume*/}
               {userType === "jobseeker" && <div className="my-2">
                 <label className="block mb-2">Upload Resume</label>
-                <input type="file" id="resume" accept=".pdf,.docx,.doc" className="bg-gray-200 px-4 py-1.5 text-sm cursor-pointer" />
+                <input type="file" id="resume" className="bg-gray-200 px-4 py-1.5 text-sm cursor-pointer" value={resumeFile} onChange={onHandleResumeUpload} />
                 <p className="text-red-700 font-semibold text-sm my-2">Note: Accept only pdf,docx</p>
               </div>}
               {/*Upload Image Files */}
