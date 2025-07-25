@@ -27,10 +27,15 @@ function App() {
 
   const [statesList, setStatesList] = useState([]);
   const [citiesList, setCitiesList] = useState([])
-  
+  const [stateName, setStateName] = useState(null);
+  const [cityName, setCityName] = useState(null);
+
   // Error Message
   const [errorMessage, setErrorMessage] = useState(null);
 
+
+  let currentState = null;
+  let currentCity = null;
   // Fetch States By Country ID 
   const fetchStates = async () => {
     const data = await fetchStatesByCountryId()
@@ -79,10 +84,10 @@ function App() {
       data = new FormData()
       data.append('fullName', name);
       data.append('mobile', mobileNumber),
-      data.append('role', role),
-      data.append('state', state);
-      data.append('city', city),
-      data.append('email', email)
+        data.append('role', role),
+        data.append('state', stateName);
+      data.append('city', cityName),
+        data.append('email', email)
       data.append('resume', resumeFile)
       // 
       if (!error) {
@@ -97,8 +102,8 @@ function App() {
       data.append('company_name', companyName)
       data.append('mobile', mobileNumber)
       data.append('meeting_link', meetingLink)
-      data.append('state', state)
-      data.append('city', city)
+      data.append('state', stateName)
+      data.append('city', cityName)
       data.append('company_url', companyUrl)
       data.append('zipcode', postalCode)
       data.append('total_openings', openings)
@@ -114,6 +119,14 @@ function App() {
       const response = await axios.post(apiUrl, data)
       if (response.status === 200) {
         console.log(response)
+        // Empty all input fields
+        setName('');
+        setMobileNumber('');
+        setEmail('');
+        setRole('');
+        setState('');
+        setCity('')
+        setResumeFile('');
       }
     }
     catch (e) {
@@ -125,14 +138,14 @@ function App() {
   const onHandleResumeUpload = (e) => {
     setResumeFile(e.target.value)
   }
-  
+
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <h1 className="text-4xl font-semibold  py-6">Welcome to Our App</h1>
       <button className="bg-blue-400 px-6 py-1 text-white rounded-sm cursor-pointer hover:bg-blue-500" onClick={onHandleRegistration}>Register Now</button>
       {/*Modal */}
       {isModalOpen && <Modal>
-        <div className="bg-blue-500 p-4 flex items-center justify-between">
+        <div className="bg-blue-500 p-4 flex items-center justify-between rounded-t-md">
           <h2 className="text-lg font-semibold text-white">Job Fair Registration</h2>
           <IoClose className="text-white text-lg cursor-pointer" onClick={onModalClose} />
         </div>
@@ -178,6 +191,7 @@ function App() {
                 <select className="border border-gray-300 p-1 outline-none w-full" onChange={(e) => {
                   setState(e.target.value)
                   fetchCities(e.target.value)
+                  setStateName(e.target.options[e.target.selectedIndex].text);
                 }}>
                   <option value="">Select State</option>
                   {
@@ -190,6 +204,7 @@ function App() {
               <div className="my-2 w-[45%]">
                 <select className="border border-gray-300 p-1 outline-none w-full" value={city} onChange={(e) => {
                   setCity(e.target.value)
+                  setCityName(e.target.options[e.target.selectedIndex].text)
                 }}>
                   <option value="">Select City</option>{
                     citiesList.map((eachCity) => (
@@ -219,7 +234,7 @@ function App() {
               </div>}
 
             </div>
-            {errorMessage !== null && <p className="text-sm font-semibold text-red-700">ERROR: {errorMessage}</p>}
+            {errorMessage && <p className="text-sm font-semibold text-red-700">ERROR: {errorMessage}</p>}
             <button className="my-2 px-6 py-1.5 text-sm bg-amber-400 rounded-sm  cursor-pointer">Submit</button>
           </div>
         </form>
