@@ -134,6 +134,7 @@ function App() {
       }
     }
     catch (e) {
+      setErrorMessage('Something went wrong')
       console.log('ERROR CREATING JOB SEEKER', e)
     }
   }
