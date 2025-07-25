@@ -3,10 +3,13 @@ import { IoClose } from "react-icons/io5";
 import Modal from "./components/Modal";
 import axios from 'axios'
 import { fetchCitiesBasedOnStateId, fetchStatesByCountryId } from "./services/api";
+import { validateJobSeekerData } from "./utils/validations";
 function App() {
+
   const [isModalOpen, setModal] = useState(false);
   const [userType, setUserType] = useState('jobseeker');
 
+  // User Related 
   const [name, setName] = useState(null);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [email, setEmail] = useState(null);
@@ -20,15 +23,21 @@ function App() {
   const [openings, setOpenings] = useState(null);
   const [description, setDescription] = useState(null);
   const [resumeFile, setResumeFile] = useState(null);
+
+
   const [statesList, setStatesList] = useState([]);
   const [citiesList, setCitiesList] = useState([])
+  
+  // Error Message
+  const [errorMessage, setErrorMessage] = useState(null);
 
+  // Fetch States By Country ID 
   const fetchStates = async () => {
     const data = await fetchStatesByCountryId()
     setStatesList(data)
   }
 
-
+  // Fetch City Names By State ID
   const fetchCities = async (stateId) => {
     const data = await fetchCitiesBasedOnStateId(stateId);
     setCitiesList(data)
@@ -38,32 +47,47 @@ function App() {
     fetchStates()
   }, [])
 
+  // Handle Registration Modal Open
   const onHandleRegistration = () => {
     setModal(true)
   }
 
+  // Handle Modal 
   const onModalClose = () => {
     setModal(false)
   }
 
+  // Handle User Type [Employer,JobSeeker]
   const onHandleUserType = (e) => {
+    setErrorMessage(null)
     setUserType(e.target.value)
   }
 
+  // Handle Form Submission
   const onHandleFormSubmit = (e) => {
     e.preventDefault()
+
     let data = null;
     if (userType === "jobseeker") {
+      // Validate the Data
+      const error = validateJobSeekerData({
+        name, email, mobile: mobileNumber, state, city, role
+      })
+      setErrorMessage(error)
+
       // Job Seeker data
       data = new FormData()
       data.append('fullName', name);
       data.append('mobile', mobileNumber),
-        data.append('role', role),
-        data.append('state', state);
+      data.append('role', role),
+      data.append('state', state);
       data.append('city', city),
-        data.append('email', email)
+      data.append('email', email)
       data.append('resume', resumeFile)
-      createJobSeeker(data)
+      // 
+      if (!error) {
+        createJobSeeker(data)
+      }
     }
     else {
       // Employer data
@@ -84,7 +108,6 @@ function App() {
   }
 
   // JOB SEEKER REGISTRATION 
-
   const createJobSeeker = async (data) => {
     try {
       const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/api/job-seeker/registration`
@@ -98,10 +121,11 @@ function App() {
     }
   }
 
+  // Handle Resume Upload
   const onHandleResumeUpload = (e) => {
     setResumeFile(e.target.value)
   }
-
+  
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <h1 className="text-4xl font-semibold  py-6">Welcome to Our App</h1>
@@ -185,7 +209,7 @@ function App() {
               {userType === "jobseeker" && <div className="my-2">
                 <label className="block mb-2">Upload Resume</label>
                 <input type="file" id="resume" className="bg-gray-200 px-4 py-1.5 text-sm cursor-pointer" value={resumeFile} onChange={onHandleResumeUpload} />
-                <p className="text-red-700 font-semibold text-sm my-2">Note: Accept only pdf,docx</p>
+                <p className=" text-sm my-2">Note: Accept only pdf,docx</p>
               </div>}
               {/*Upload Image Files */}
               {userType !== "jobseeker" && <div className="my-2">
@@ -195,6 +219,7 @@ function App() {
               </div>}
 
             </div>
+            {errorMessage !== null && <p className="text-sm font-semibold text-red-700">ERROR: {errorMessage}</p>}
             <button className="my-2 px-6 py-1.5 text-sm bg-amber-400 rounded-sm  cursor-pointer">Submit</button>
           </div>
         </form>
