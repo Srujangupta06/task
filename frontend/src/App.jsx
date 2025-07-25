@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 import Modal from "./components/Modal";
 import axios from 'axios'
 import { fetchCitiesBasedOnStateId, fetchStatesByCountryId } from "./services/api";
-import { validateJobSeekerData } from "./utils/validations";
+import { validateEmployerData, validateJobSeekerData } from "./utils/validations";
 function App() {
 
   const [isModalOpen, setModal] = useState(false);
@@ -95,6 +95,11 @@ function App() {
       }
     }
     else {
+      // Validate Employer Data
+      const error = validateEmployerData({
+        name, email, mobile: mobileNumber, companyName, companyUrl, state, city, postalCode, openings, description
+      })
+      setErrorMessage(error)
       // Employer data
       data = new FormData()
       data.append('contact_name', name)
@@ -109,7 +114,6 @@ function App() {
       data.append('total_openings', openings)
       data.append('description', description)
     }
-
   }
 
   // JOB SEEKER REGISTRATION 
