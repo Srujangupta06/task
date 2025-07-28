@@ -1,6 +1,6 @@
 export const validateJobSeekerData = (body) => {
 
-    const MINREQUIREDFNCHAR = 5;
+    const MINREQUIREDFNCHAR = 4;
 
     const { name, email, mobile, role, state, city } = body;
 
@@ -26,6 +26,7 @@ export const validateJobSeekerData = (body) => {
     // USER ROLE VALIDATION
     if (!role) return 'Role is required';
 
+    if (role.length < 4) return 'Role must be atleast 4 and more chars'
     // STATE VALIDATION
     if (!state) return 'State is required';
 
