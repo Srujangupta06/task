@@ -11,6 +11,7 @@ import {
   validateJobSeekerData,
 } from "../utils/validations";
 import { Link, useNavigate } from "react-router-dom";
+
 const Registration = () => {
 
   const navigate = useNavigate()
@@ -74,7 +75,7 @@ const Registration = () => {
   };
 
   // Handle Form Submission
-  const onHandleFormSubmit = (e) => {
+  const onHandleFormSubmit = async (e) => {
     e.preventDefault();
 
     let data = null;
@@ -103,9 +104,18 @@ const Registration = () => {
       }
       // IF NO ERRORS CREATES NEW JOBSEEKER
       if (!error) {
-        createJobSeeker(textData);
-        jobseekerFileUpload(data);
+        try {
+          const response = await createJobSeeker(textData);
+          if (response.status === 200) {
+            await jobseekerFileUpload(data); 
+          } else {
+            console.error('Failed to create job seeker. Status:', response.status);
+          }
+        } catch (e) {
+          console.error('Error during job seeker creation:', e);
+        }
       }
+
     } else {
       // Validate Employer Data
       const error = validateEmployerData({
@@ -183,7 +193,7 @@ const Registration = () => {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-semibold  py-6">Welcome to Our App</h1>
+      <h1 className="text-2xl lg:text-4xl font-semibold py-6 ">Welcome to Our App</h1>
       <button
         className="bg-blue-400 px-6 py-1 text-white rounded-sm cursor-pointer hover:bg-blue-500"
         onClick={onHandleRegistration}
@@ -207,7 +217,7 @@ const Registration = () => {
           </div>
           {/*Registration Form */}
           <p className="mt-4 px-4">Register As</p>
-          <form className="p-4 w-full" onSubmit={onHandleFormSubmit}>
+          <form className="p-4 w-full overflow-auto" onSubmit={onHandleFormSubmit}>
             <div className="flex gap-x-8">
               {/*Job Seeker */}
               <div>
@@ -238,7 +248,7 @@ const Registration = () => {
             <div>
               <div className="flex flex-wrap gap-x-8 mt-4">
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type="text"
                       required
@@ -249,7 +259,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[45%]">
+                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                   <input
                     type="text"
                     required
@@ -262,7 +272,7 @@ const Registration = () => {
                   />
                 </div>
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type=""
                       required
@@ -273,7 +283,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[45%]">
+                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                   <input
                     type="email"
                     required
@@ -285,7 +295,7 @@ const Registration = () => {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                <div className="my-2 w-[45%]">
+                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                   <input
                     type="tel"
                     required
@@ -296,7 +306,7 @@ const Registration = () => {
                   />
                 </div>
                 {userType === "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type="text"
                       required
@@ -308,7 +318,7 @@ const Registration = () => {
                   </div>
                 )}
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type="text"
                       required
@@ -319,7 +329,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[45%]">
+                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                   <select
                     className="border border-gray-300 p-1 outline-none w-full"
                     onChange={(e) => {
@@ -338,7 +348,7 @@ const Registration = () => {
                     ))}
                   </select>
                 </div>
-                <div className="my-2 w-[45%]">
+                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                   <select
                     className="border border-gray-300 p-1 outline-none w-full"
                     value={city}
@@ -358,7 +368,7 @@ const Registration = () => {
                   </select>
                 </div>
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type="number"
                       required
@@ -370,7 +380,7 @@ const Registration = () => {
                   </div>
                 )}
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
                     <input
                       type="number"
                       required

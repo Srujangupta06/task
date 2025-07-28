@@ -45,8 +45,8 @@ const Users = () => {
       <Link to='/' className="text-blue-500 underline mb-4 block text-center">
         Back to Home
       </Link>
-      <div className="overflow-x-auto w-full flex flex-col items-center">
-        <table className="min-w-[70%] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
+      <div className="overflow-x-auto w-full flex flex-col md:items-center">
+        <table className="min-w-[95%] lg:min-w-[70%] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
           <thead className="bg-blue-400 text-white">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">User ID</th>
@@ -68,7 +68,8 @@ const Users = () => {
           </tbody>
         </table>
       </div>
-      <div className='flex flex-col items-end mr-[200px] my-12'>
+      {/*PAGINATION */}
+      {users && <div className='flex flex-col items-end md:mr-[200px] my-12'>
         <div className='flex items-center gap-x-3'>
           <button
             className={`cursor-pointer flex items-center gap-x-0.5 px-3 py-1.5 rounded  disabled:text-gray-300 disabled:cursor-not-allowed`}
@@ -90,7 +91,7 @@ const Users = () => {
             <GrFormPrevious className='rotate-180' />
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
