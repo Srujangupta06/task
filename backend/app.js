@@ -1,9 +1,10 @@
 const express = require('express');
-const { initializeDB, pool } = require('./config/db');
+const { initializeDB } = require('./config/db');
 require('dotenv').config();
-const upload = require('./config/multer');
-const validateData = require('./validations/validations');
+
 const cors = require('cors');
+const jobseekerRoutes = require('./routes/jobseeker.routes')
+const employerRoutes = require('./routes/employer.routes')
 const app = express();
 
 // PORT DECLARATION
@@ -13,131 +14,14 @@ const PORT = process.env.PORT ?? 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+app.use('/api/job-seeker', jobseekerRoutes)       // JOB SEEKER ROUTES
+app.use('/api/employer', employerRoutes)     // EMPLOYER ROUTES
 
 app.use(cors({
     origin: 'http://localhost:5173',
     methods: ['POST', 'GET']
 }))
-
-// END POINTS
-app.post('/api/job-seeker/registration', async (req, res) => {
-    try {
-        let userId;
-        const { fullName, role, state, city, email, mobile } = req.body;
-
-        // VALIDATE INPUT 
-        validateData({ fullName, role, state, city, email, mobile });
-
-
-        // Check whether user already registered
-        const isUserExistsQuery = `SELECT*  FROM jobseeker WHERE email = ?`;
-        // Using parameterized query to prevent SQL injection  
-        const [isUserExist] = await pool.promise().query(isUserExistsQuery, [email])
-        if (isUserExist.length === 0) {
-            // INSERT INTO DB using parameterized query  
-            const insertQuery = `
-                INSERT INTO jobseeker (full_name, email, role, mobile, state, city)
-                VALUES (?, ?, ?, ?, ?, ?)
-            `;
-
-            const [result] = await pool.promise().query(insertQuery, [fullName, email, role, mobile, state, city]);
-            userId = result.insertId;
-        }
-        else {
-            return res.status(400).json({
-                message: 'Email already exists'
-            })
-        }
-
-        return res.status(200).json({
-            data: userId,
-            statusCode: 200,
-            message: 'Job Seeker Registration Successful'
-        });
-
-    } catch (e) {
-        console.error('ERROR JOB SEEKER REGISTRATION:', e.message);
-        return res.status(400).json({
-            statusCode: 400,
-            message: e.message || 'Something went wrong'
-        });
-    }
-});
-
-// FILE UPLOAD
-app.post('/api/job-seeker/uploads', upload.single('resume'), async (req, res) => {
-    try {
-        const file = req.file;
-        if (!file) {
-            return res.status(400).json({
-                message: 'File Upload Required'
-            })
-        }
-        res.status(200).json({ message: 'File uploaded successfully'});
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ message: 'File Upload failed', error: e.message });
-    }
-});
-
-app.get('/api/job-seeker/list', async (req, res) => {
-    try {
-        const { limit, page } = req.query;
-        const limitValue = parseInt(limit) || 10;
-        const pageValue = parseInt(page) || 1;
-        const offset = (pageValue - 1) * limitValue;
-
-        const paginatedQuery = `SELECT * FROM jobseeker LIMIT ? OFFSET ?`;
-        const [paginatedResults] = await pool.promise().query(paginatedQuery, [limitValue, offset]);
-
-        const countQuery = `SELECT COUNT(*) as totalCount FROM jobseeker`;
-        const [countResults] = await pool.promise().query(countQuery);
-        const totalCount = countResults[0].totalCount;
-
-        return res.json({
-            data: paginatedResults,
-            totalCount,
-        });
-    } catch (e) {
-        console.error('ERROR FETCHING JOB SEEKER LIST:', e.message);
-        return res.status(400).json({
-            statusCode: 400,
-            message: e.message || 'Something went wrong',
-        });
-    }
-});
-
-
-// end point for employer 
-
-app.post('/api/employer/registration', async (req,res)=>
-{
-  try{
-    const { company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email} = req.body;
-    //insert the data using parameterized query
-
-    const insertQuery = `INSERT INTO employer (company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies ,contact_email) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
- 
-    await pool.promise().query(insertQuery, [ company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email]);
-
-    return res.status(200).json({
-      statusCode:200,
-      message: 'employer registration successful'
-      
-    })
-
-  }
-  catch(e){
-    console.error('ERROR JOB SEEKER REGISTRATION:', e.message);
-        return res.status(400).json({
-            statusCode: 400,
-            message: e.message || 'Something went wrong'
-        });
-    
-
-  }
-
-});
 
 // SERVER INITIALIZATION
 const initializeDBAndServer = async () => {
