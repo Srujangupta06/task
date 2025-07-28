@@ -20,8 +20,7 @@ app.use(cors({
 }))
 
 // END POINTS
-
-app.post('/api/job-seeker/registration', upload.single('resume'), async (req, res) => {
+app.post('/api/job-seeker/registration', async (req, res) => {
     try {
         const { fullName, role, state, city, email, mobile } = req.body;
 
@@ -34,9 +33,10 @@ app.post('/api/job-seeker/registration', upload.single('resume'), async (req, re
             VALUES (?, ?, ?, ?, ?, ?)
         `;
 
-        await pool.promise().query(insertQuery, [fullName, email, role, mobile, state, city]);
-
+        const [result] = await pool.promise().query(insertQuery, [fullName, email, role, mobile, state, city]);
+        const userId = result.insertId;
         return res.status(200).json({
+            data: userId,
             statusCode: 200,
             message: 'Job Seeker Registration Successful'
         });
@@ -51,30 +51,30 @@ app.post('/api/job-seeker/registration', upload.single('resume'), async (req, re
 });
 
 app.get('/api/job-seeker/list', async (req, res) => {
-  try {
-    const { limit, page } = req.query;
-    const limitValue = parseInt(limit) || 10;
-    const pageValue = parseInt(page) || 1;
-    const offset = (pageValue - 1) * limitValue;
+    try {
+        const { limit, page } = req.query;
+        const limitValue = parseInt(limit) || 10;
+        const pageValue = parseInt(page) || 1;
+        const offset = (pageValue - 1) * limitValue;
 
-    const paginatedQuery = `SELECT * FROM jobseeker LIMIT ? OFFSET ?`;
-    const [paginatedResults] = await pool.promise().query(paginatedQuery, [limitValue, offset]);
+        const paginatedQuery = `SELECT * FROM jobseeker LIMIT ? OFFSET ?`;
+        const [paginatedResults] = await pool.promise().query(paginatedQuery, [limitValue, offset]);
 
-    const countQuery = `SELECT COUNT(*) as totalCount FROM jobseeker`;
-    const [countResults] = await pool.promise().query(countQuery);
-    const totalCount = countResults[0].totalCount;
+        const countQuery = `SELECT COUNT(*) as totalCount FROM jobseeker`;
+        const [countResults] = await pool.promise().query(countQuery);
+        const totalCount = countResults[0].totalCount;
 
-    return res.json({
-      data: paginatedResults,
-      totalCount,
-    });
-  } catch (e) {
-    console.error('ERROR FETCHING JOB SEEKER LIST:', e.message);
-    return res.status(400).json({
-      statusCode: 400,
-      message: e.message || 'Something went wrong',
-    });
-  }
+        return res.json({
+            data: paginatedResults,
+            totalCount,
+        });
+    } catch (e) {
+        console.error('ERROR FETCHING JOB SEEKER LIST:', e.message);
+        return res.status(400).json({
+            statusCode: 400,
+            message: e.message || 'Something went wrong',
+        });
+    }
 });
 
 

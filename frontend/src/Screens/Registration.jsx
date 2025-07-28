@@ -91,11 +91,12 @@ const Registration = () => {
       data = new FormData();
       data.append("fullName", name);
       data.append("mobile", mobileNumber),
-        data.append("role", role),
-        data.append("state", stateName);
+      data.append("role", role),
+      data.append("state", stateName);
       data.append("city", cityName), data.append("email", email);
       data.append("resume", resumeFile);
-      //
+      
+      // IF NO ERRORS CREATES NEW JOBSEEKER
       if (!error) {
         createJobSeeker(data);
       }
