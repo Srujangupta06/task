@@ -10,6 +10,7 @@ import {
   validateEmployerData,
   validateJobSeekerData,
 } from "../utils/validations";
+import { Link } from "react-router-dom";
 const Registration = () => {
   const [isModalOpen, setModal] = useState(false);
   const [userType, setUserType] = useState("jobseeker");
@@ -132,9 +133,8 @@ const Registration = () => {
   // JOB SEEKER REGISTRATION
   const createJobSeeker = async (data) => {
     try {
-      const apiUrl = `${
-        import.meta.env.VITE_BACKEND_URL
-      }/api/job-seeker/registration`;
+      const apiUrl = `${import.meta.env.VITE_BACKEND_URL
+        }/api/job-seeker/registration`;
       const response = await axios.post(apiUrl, data);
       if (response.status === 200) {
         console.log(response);
@@ -167,6 +167,9 @@ const Registration = () => {
       >
         Register Now
       </button>
+      <Link className="text-blue-500 underline mt-4" to="/users">
+        Show Registered Users
+      </Link>
       {/*Modal */}
       {isModalOpen && (
         <Modal>
