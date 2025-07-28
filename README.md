@@ -50,4 +50,6 @@ ENPOINT - /api/job-seeker/registration
 
 returns new User ID
 
-
+3) METHOD - POST
+ENDPOINT - /api/job-seeker/uploads
+- For Jobseeker resume uploads

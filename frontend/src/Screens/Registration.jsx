@@ -10,8 +10,11 @@ import {
   validateEmployerData,
   validateJobSeekerData,
 } from "../utils/validations";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Registration = () => {
+
+  const navigate = useNavigate()
+
   const [isModalOpen, setModal] = useState(false);
   const [userType, setUserType] = useState("jobseeker");
 
@@ -89,16 +92,19 @@ const Registration = () => {
 
       // Job Seeker data
       data = new FormData();
-      data.append("fullName", name);
-      data.append("mobile", mobileNumber),
-      data.append("role", role),
-      data.append("state", stateName);
-      data.append("city", cityName), data.append("email", email);
       data.append("resume", resumeFile);
-      
+      const textData = {
+        fullName: name,
+        role,
+        mobile: mobileNumber,
+        state: stateName,
+        city: cityName,
+        email
+      }
       // IF NO ERRORS CREATES NEW JOBSEEKER
       if (!error) {
-        createJobSeeker(data);
+        createJobSeeker(textData);
+        jobseekerFileUpload(data);
       }
     } else {
       // Validate Employer Data
@@ -138,7 +144,6 @@ const Registration = () => {
         }/api/job-seeker/registration`;
       const response = await axios.post(apiUrl, data);
       if (response.status === 200) {
-        console.log(response);
         // Empty all input fields
         setName("");
         setMobileNumber("");
@@ -147,12 +152,29 @@ const Registration = () => {
         setState("");
         setCity("");
         setResumeFile("");
+        // navigate to /users
+        navigate('/users')
       }
     } catch (e) {
-      setErrorMessage("Something went wrong");
-      console.log("ERROR CREATING JOB SEEKER", e);
+      setErrorMessage(e.response.data.message ?? 'Some thing Went Wrong')
     }
   };
+
+  const jobseekerFileUpload = async (data) => {
+    try {
+      const apiUrl = import.meta.env.VITE_BACKEND_URL + '/api/job-seeker/uploads'
+      const response = await axios.post(apiUrl, data);
+      if (response.ok) {
+        setErrorMessage('');
+      }
+      else {
+        setErrorMessage('File Upload Failed', response.data.message)
+      }
+    }
+    catch (e) {
+      console.error('FILE UPLOAD FAILED FOR JOB-SEEKER: ', e.message)
+    }
+  }
 
   // Handle Resume Upload
   const onHandleResumeUpload = (e) => {

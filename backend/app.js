@@ -22,19 +22,32 @@ app.use(cors({
 // END POINTS
 app.post('/api/job-seeker/registration', async (req, res) => {
     try {
+        let userId;
         const { fullName, role, state, city, email, mobile } = req.body;
 
         // VALIDATE INPUT 
         validateData({ fullName, role, state, city, email, mobile });
 
-        // INSERT INTO DB using parameterized query
-        const insertQuery = `
-            INSERT INTO jobseeker (full_name, email, role, mobile, state, city)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
 
-        const [result] = await pool.promise().query(insertQuery, [fullName, email, role, mobile, state, city]);
-        const userId = result.insertId;
+        // Check whether user already registered
+        const isUserExistsQuery = `SELECT*  FROM jobseeker WHERE email = ?`;
+        const [isUserExist] = await pool.promise().query(isUserExistsQuery, [email])
+        if (isUserExist.length === 0) {
+            // INSERT INTO DB using parameterized query
+            const insertQuery = `
+                INSERT INTO jobseeker (full_name, email, role, mobile, state, city)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+
+            const [result] = await pool.promise().query(insertQuery, [fullName, email, role, mobile, state, city]);
+            userId = result.insertId;
+        }
+        else {
+            return res.status(400).json({
+                message: 'Email already exists'
+            })
+        }
+
         return res.status(200).json({
             data: userId,
             statusCode: 200,
@@ -47,6 +60,22 @@ app.post('/api/job-seeker/registration', async (req, res) => {
             statusCode: 400,
             message: e.message || 'Something went wrong'
         });
+    }
+});
+
+// FILE UPLOAD
+app.post('/api/job-seeker/uploads', upload.single('resume'), async (req, res) => {
+    try {
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({
+                message: 'File Upload Required'
+            })
+        }
+        res.status(200).json({ message: 'File uploaded successfully', file });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: 'File Upload failed', error: e.message });
     }
 });
 
