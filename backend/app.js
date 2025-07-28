@@ -34,7 +34,7 @@ app.post('/api/job-seeker/registration', async (req, res) => {
         // Using parameterized query to prevent SQL injection  
         const [isUserExist] = await pool.promise().query(isUserExistsQuery, [email])
         if (isUserExist.length === 0) {
-            // INSERT INTO DB using parameterized query
+            // INSERT INTO DB using parameterized query 
             const insertQuery = `
                 INSERT INTO jobseeker (full_name, email, role, mobile, state, city)
                 VALUES (?, ?, ?, ?, ?, ?)
