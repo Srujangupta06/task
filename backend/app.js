@@ -1,10 +1,10 @@
 const express = require('express');
-const { initializeDB } = require('./config/db');
+const { initializeDB } = require('./src/config/db');
 require('dotenv').config();
 
 const cors = require('cors');
-const jobseekerRoutes = require('./routes/jobseeker.routes')
-const employerRoutes = require('./routes/employer.routes')
+const jobseekerRoutes = require('./src/routes/jobseeker.routes')
+const employerRoutes = require('./src/routes/employer.routes')
 const app = express();
 
 // PORT DECLARATION
