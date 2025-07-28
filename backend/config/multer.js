@@ -6,8 +6,11 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, '../uploads')); // PATH FOR FILE UPLOADS
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
+    const name = req.body?.fullname?.toLowerCase() || 'user'; 
+    const ext = path.extname(file.originalname); 
+    const uniqueSuffix = Date.now(); 
+    const filename = `${name}-job-seeker-resume-${uniqueSuffix}${ext}`;
+    cb(null, filename);
   }
 });
 
@@ -28,7 +31,7 @@ const fileFilter = (req, file, cb) => {
 
 
 const upload = multer({
-  storage, fileFilter, limits: {
+  storage, limits: {
     fileSize: 20 * 1024 * 1024    // Upto 20MB
   }
 });

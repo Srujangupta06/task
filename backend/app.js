@@ -72,7 +72,7 @@ app.post('/api/job-seeker/uploads', upload.single('resume'), async (req, res) =>
                 message: 'File Upload Required'
             })
         }
-        res.status(200).json({ message: 'File uploaded successfully', file });
+        res.status(200).json({ message: 'File uploaded successfully'});
     } catch (e) {
         console.error(e);
         res.status(500).json({ message: 'File Upload failed', error: e.message });
