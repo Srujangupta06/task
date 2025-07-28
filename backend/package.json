@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "-  JobSeeker Registration\r - Employer",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
