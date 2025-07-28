@@ -259,7 +259,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                <div className="my-2 w-[95%] md:w-[45%]">
                   <input
                     type="text"
                     required
@@ -272,7 +272,7 @@ const Registration = () => {
                   />
                 </div>
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[45%]">
                     <input
                       type=""
                       required
@@ -283,7 +283,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                <div className="my-2 w-[95%] md:w-[45%]">
                   <input
                     type="email"
                     required
@@ -295,7 +295,7 @@ const Registration = () => {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                <div className="my-2 w-[95%] md:w-[45%]">
                   <input
                     type="tel"
                     required
@@ -306,7 +306,7 @@ const Registration = () => {
                   />
                 </div>
                 {userType === "jobseeker" && (
-                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[45%]">
                     <input
                       type="text"
                       required
@@ -318,7 +318,7 @@ const Registration = () => {
                   </div>
                 )}
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[45%]">
                     <input
                       type="text"
                       required
@@ -329,7 +329,7 @@ const Registration = () => {
                     />
                   </div>
                 )}
-                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                <div className="my-2 w-[95%] md:w-[45%]">
                   <select
                     className="border border-gray-300 p-1 outline-none w-full"
                     onChange={(e) => {
@@ -348,7 +348,7 @@ const Registration = () => {
                     ))}
                   </select>
                 </div>
-                <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                <div className="my-2 w-[95%] md:w-[45%]">
                   <select
                     className="border border-gray-300 p-1 outline-none w-full"
                     value={city}
@@ -368,7 +368,7 @@ const Registration = () => {
                   </select>
                 </div>
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[45%]">
                     <input
                       type="number"
                       required
@@ -380,7 +380,7 @@ const Registration = () => {
                   </div>
                 )}
                 {userType !== "jobseeker" && (
-                  <div className="my-2 w-[95%] md:w-[60%] lg:w-[45%]">
+                  <div className="my-2 w-[95%] md:w-[45%]">
                     <input
                       type="number"
                       required
@@ -409,7 +409,7 @@ const Registration = () => {
                     <input
                       type="file"
                       id="resume"
-                      className="bg-gray-200 px-4 py-1.5 text-sm cursor-pointer"
+                      className="bg-gray-100 px-4 py-1.5 text-sm cursor-pointer"
                       value={resumeFile}
                       onChange={onHandleResumeUpload}
                     />
