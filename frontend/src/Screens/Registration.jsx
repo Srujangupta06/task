@@ -12,6 +12,7 @@ import {
 } from "../utils/validations";
 import { Link, useNavigate } from "react-router-dom";
 const Registration = () => {
+  
 
   const navigate = useNavigate()
 
@@ -56,6 +57,9 @@ const Registration = () => {
   useEffect(() => {
     fetchStates();
   }, []);
+
+
+
 
   // Handle Registration Modal Open
   const onHandleRegistration = () => {
@@ -109,6 +113,7 @@ const Registration = () => {
     } else {
       // Validate Employer Data
       const error = validateEmployerData({
+
         name,
         email,
         mobile: mobileNumber,

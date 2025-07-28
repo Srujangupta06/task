@@ -19,6 +19,7 @@ app.use(cors({
     methods: ['POST', 'GET']
 }))
 
+
 // END POINTS
 app.post('/api/job-seeker/registration', async (req, res) => {
     try {
@@ -138,6 +139,20 @@ app.post('/api/employer/registration', async (req,res)=>
   }
 
 });
+
+//creating api for an image
+
+
+
+app.post("/api/employer/img",(req,res)=>{
+    const image = req.body;
+    const imageUrl = `https://yourdomain.com/uploads/${req.file.filename}`;
+    res.json({ url: imageUrl });
+
+
+
+
+})
 
 // SERVER INITIALIZATION
 const initializeDBAndServer = async () => {

@@ -9,6 +9,7 @@ export const validateJobSeekerData = (body) => {
     if (!name) {
         return 'Full Name is required';
     }
+    
     if (name.length < MINREQUIREDFNCHAR) return `Full Name atleast ${MINREQUIREDFNCHAR} characters required`
 
     // EMAIL VALIDATIONS
