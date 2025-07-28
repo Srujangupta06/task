@@ -31,7 +31,7 @@ app.post('/api/job-seeker/registration', async (req, res) => {
 
         // Check whether user already registered
         const isUserExistsQuery = `SELECT*  FROM jobseeker WHERE email = ?`;
-        // Using parameterized query to prevent SQL injection
+        // Using parameterized query to prevent SQL injection  
         const [isUserExist] = await pool.promise().query(isUserExistsQuery, [email])
         if (isUserExist.length === 0) {
             // INSERT INTO DB using parameterized query
