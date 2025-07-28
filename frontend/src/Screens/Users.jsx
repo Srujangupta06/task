@@ -71,7 +71,7 @@ const Users = () => {
       <div className='flex flex-col items-end mr-[200px] my-12'>
         <div className='flex items-center gap-x-3'>
           <button
-            className={`flex items-center gap-x-0.5 px-3 py-1.5 rounded  disabled:text-gray-300 disabled:cursor-not-allowed`}
+            className={`cursor-pointer flex items-center gap-x-0.5 px-3 py-1.5 rounded  disabled:text-gray-300 disabled:cursor-not-allowed`}
             onClick={onHandlePreviousBtn}
             disabled={currentPage <= 1}
           >
@@ -82,7 +82,7 @@ const Users = () => {
             {currentPage}
           </div>
           <button
-            className={`flex items-center gap-x-0.5 px-3 py-1.5 rounded  disabled:text-gray-300 disabled:cursor-not-allowed`}
+            className={`cursor-pointer flex items-center gap-x-0.5 px-3 py-1.5 rounded  disabled:text-gray-300 disabled:cursor-not-allowed`}
             onClick={onHandleNextBtn}
             disabled={currentPage >= totalPages}
           >
