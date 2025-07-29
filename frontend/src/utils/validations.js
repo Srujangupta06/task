@@ -1,6 +1,7 @@
 export const validateJobSeekerData = (body) => {
 
     const MINREQUIREDFNCHAR = 4;
+    console.log(body);
 
     const { name, email, mobile, role, state, city } = body;
 

@@ -39,6 +39,7 @@ const Registration = () => {
   const [stateName, setStateName] = useState(null);
   const [cityName, setCityName] = useState(null);
 
+
   // Error Message
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -57,6 +58,12 @@ const Registration = () => {
   useEffect(() => {
     fetchStates();
   }, []);
+
+  useEffect(() => {
+    if(state !== null) {
+      fetchCities(state);
+    }
+  }, [state]);
 
   // Handle Registration Modal Open
   const onHandleRegistration = () => {
@@ -102,6 +109,7 @@ const Registration = () => {
         city: cityName,
         email
       }
+      console.log(error);
       // IF NO ERRORS CREATES NEW JOBSEEKER
       if (!error) {
         try {
@@ -150,6 +158,7 @@ const Registration = () => {
   // JOB SEEKER REGISTRATION
   const createJobSeeker = async (data) => {
     try {
+      console.log(data);
       const apiUrl = `${import.meta.env.VITE_BACKEND_URL
         }/api/job-seeker/registration`;
       const response = await axios.post(apiUrl, data);
@@ -334,7 +343,6 @@ const Registration = () => {
                     className="border border-gray-300 p-1 outline-none w-full"
                     onChange={(e) => {
                       setState(e.target.value);
-                      fetchCities(e.target.value);
                       setStateName(
                         e.target.options[e.target.selectedIndex].text
                       );

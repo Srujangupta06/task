@@ -1,15 +1,17 @@
+
 const { pool } = require('../config/db');
 
 const registerEmployer = async (req, res) => {
     try {
-        const { company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email } = req.body;
+        const { company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email, profileUrl} = req.body;
         //validating employer data
 
-        validateEmployerData({ company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email });
+        
 
-        const insertQuery = `INSERT INTO employer (company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies ,contact_email) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        const insertQuery = `INSERT INTO employer (company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email, profileUrl) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        console.log(insertQuery);
 
-        await pool.promise().query(insertQuery, [company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email]);
+        await pool.promise().query(insertQuery, [company_name, company_email, meeting_link, contact_name, contact_mobile, zip_code, openings, technologies, contact_email, profileUrl]);
 
         return res.status(200).json({
             statusCode: 200,
@@ -27,6 +29,8 @@ const registerEmployer = async (req, res) => {
 
     }
 }
+
+
 
 
 const imageUpload = async (req, res) =>{
