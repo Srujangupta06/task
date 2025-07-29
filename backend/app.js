@@ -10,6 +10,10 @@ const app = express();
 // PORT DECLARATION
 const PORT = process.env.PORT ?? 3000;
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['POST', 'GET']
+}))
 // MIDDLEWARE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,10 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/job-seeker', jobseekerRoutes)       // JOB SEEKER ROUTES
 app.use('/api/employer', employerRoutes)     // EMPLOYER ROUTES
 
-app.use(cors({
-    origin: 'http://localhost:5173',
-    methods: ['POST', 'GET']
-}))
+
 
 // SERVER INITIALIZATION
 const initializeDBAndServer = async () => {
