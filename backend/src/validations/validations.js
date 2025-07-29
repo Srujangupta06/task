@@ -29,4 +29,6 @@ const validateData = (body) => {
     if (!city) return 'City is required';
 }
 
+//
+
 module.exports = validateData

@@ -25,4 +25,15 @@ const registerEmployer = async (req, res) => {
     }
 }
 
-module.exports = { registerEmployer }
+
+const imageUpload = (req, res) =>{
+    const image= req.file;
+    
+
+    res.json({message:'image uplodaed succeessfully',image});
+
+
+
+
+}
+module.exports = { registerEmployer, imageUpload };
