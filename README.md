@@ -53,3 +53,11 @@ returns new User ID
 3) METHOD - POST
 ENDPOINT - /api/job-seeker/uploads
 - For Jobseeker resume uploads
+
+4) METHOD - POST
+ENDPOINT - /api/employer/registration
+- For Employer registration
+
+5) METHOD - POST
+ENDPOINT - /api/employer/imageupload
+- For Employer images upload

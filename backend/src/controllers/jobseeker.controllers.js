@@ -4,6 +4,7 @@ const { pool } = require('../config/db')
 const uploadJobSeekerResumeFile = async (req, res) => {
     try {
         const file = req.file;
+        
         if (!file) {
             return res.status(400).json({
                 message: 'File Upload Required'

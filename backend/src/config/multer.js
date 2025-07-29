@@ -10,24 +10,24 @@ const storage = multer.diskStorage({
     const ext = path.extname(file.originalname); 
     const uniqueSuffix = Date.now(); 
     const filename = `${name}-job-seeker-resume-${uniqueSuffix}${ext}`;
-    cb(null, filename);
+    cb(null, filename); 
   }
 });
 
 // ALLOWED FILE FORMAT FOR FILE UPLOADING
-const allowedMimeTypes = [
-  'application/pdf',
-  'application/msword', // .doc
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
-];
+// const allowedMimeTypes = [
+//   'application/pdf',
+//   'application/msword', // .doc
+//   'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+// ];
 
-const fileFilter = (req, file, cb) => {
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only PDF, DOC, and DOCX files are allowed'), false);
-  }
-}
+// const fileFilter = (req, file, cb) => {
+//   if (allowedMimeTypes.includes(file.mimetype)) {
+//     cb(null, true);
+//   } else {
+//     cb(new Error('Only PDF, DOC, and DOCX files are allowed'), false);
+//   }
+// }
 
 
 const upload = multer({
